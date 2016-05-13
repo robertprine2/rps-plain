@@ -1,0 +1,78 @@
+body {
+	text-align: center;
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 16px;
+}
+
+h1 {
+	font-family: 'Droid Serif', serif;
+	font-size: 40px;
+	margin: 15px;
+}
+
+h2 {
+	font-family: 'Droid Serif', serif;
+	font-size: 30px;
+	margin: 15px;
+}
+
+/* Spaces on the board */
+
+.row .col-sm-1 {
+	padding: 0;
+}
+
+.moveSpace {
+	border: solid 2px blue;
+	overflow: hidden;
+}
+
+/* Game pieces */
+
+.piece {
+	height: 8.33%;
+	width: 8.33%;
+}
+
+.onboard img {
+	width: 100%;
+	height: 100%;
+}
+
+button img {
+	height: 100%;
+	width: 100%;
+}
+
+.target img {
+	border: solid 2px red;
+}
+
+/* Social Icons */
+
+.socIcon {
+	margin: 20px;
+	display: inline-block;
+}
+
+.social {
+	width: 62px;
+	height: 62px;
+	background-color: white;
+}
+
+.social:hover{
+	transition: all 1s ease;
+	-webkit-transform:scale(1.5); 
+    -moz-transform:scale(1.5); 
+    -ms-transform:scale(1.5); 
+    -o-transform:scale(1.5); 
+     transform:scale(1.5);
+     z-index: +10;
+}
+
+footer {
+	text-align: center;
+	padding: 30px;
+	color: black;
+}
