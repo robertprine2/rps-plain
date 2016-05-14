@@ -16,8 +16,20 @@ h2 {
 	margin: 15px;
 }
 
+/* Form divs */
+
 .form {
 	display: inline-block;
+}
+
+/* Game Area Divs */
+
+#player1, #winner, #player2 {
+	border: solid 3px blue;
+	height: 300px;
+	width: 30%;
+	margin-left: 3%;
+	margin-top: 20px;
 }
 
 /* Game pieces */
