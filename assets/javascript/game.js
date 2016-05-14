@@ -6,6 +6,10 @@ $(document).ready(function(){
 
 	var game = {
 
+		// variable for firebase app
+
+		dataInfo: new Firebase("https://rpslsp.firebaseio.com/"),
+
 		// Array with game pieces
 
 		pieces: [
@@ -21,82 +25,78 @@ $(document).ready(function(){
 			image: "<img src='assets/images/spork.png'>"},
 			],
 
-		// variable click is for targeting or placing a piece, 0 to target 1 to appendTo
+		// variables used for player objects
 
-		click: 0,
+		name: "",
 
-		// method to generate pieces for placement on the board
+		pick: "",
 
-		genPieces: function() {
+		wins: 0,
 
-			for (var i = 0; i < game.pieces.length; i++) {
+		losses: 0,
 
-				var p = $('<button>');
-				p.addClass("piece");
-				p.attr('data-index', i);
-				p.attr('data-name', game.pieces[i].name);
-				p.append('<p>' + game.pieces[i].name + '</p>');
-				p.append(game.pieces[i].image);
+		ties: 0,
 
-				$("#pieces").append(p);
+		player: 1,
 
-			} // ends for loop
+		// When name is entered create an object in firebase with name losses wins and ties...in addition create text instead of login box that says, "Hi obj.name! You are player 1. (It's your turn![only after player 2 has joined])" or "Hi obj.name! You are player 2. You are waiting for player 1 to make their choice."....also prints obj.name, choices (r,p,s,l,sp[only after player 2 has logged in as well]), and wins, losses and ties in that order...Also highlights by changin the border color of the player whos turn it is. Once both have joined make turn counter in firebase.
 
-			//puts blank spaces on the board
+		connect: function() {
 
-			$(".moveSpace").append("<img src='assets/images/blank.png'>");
+			$("#connect").on('click', function() {
 
-		}, // ends genPieces method
+				game.name = $("#name-input").val().trim();
 
-		// method for targeting a piece
+				console.log(game.name);
 
-		targetPiece: function() {
+				// pushes data to firebase
 
-			$(document.body).on('click', '.piece', function(){
+				game.dataInfo.push({
+					name: game.name,
+					pick: game.pick,
+					wins: game.wins,
+					losses: game.losses,
+					ties: game.ties,
+					player: game.player
+				});
 
-				if (game.click == 0) {
-					$(".target").removeClass("target");
-					$(this).addClass("target");
-					game.click++;
-				} // end if
+				// if player is 1 then add 1, else subtract 1
 
-			}); // end on click for .piece
+				if (game.player == 1) {
+					game.player++;
+				}
 
-		}, // end targetPiece method
+				else {
+					game.player--;
+				}
 
+				// Doesn't refresh the forms
 
+				return false;
 
-		movePiece: function() {
-			$(document.body).on('click', '.moveSpace', function() {
+			}); // ends on click for the #connect button
 
-				if (game.click == 1) {
-					$(this).empty();
-					$('.target').appendTo($(this));
-					// var index = $('.target').data('index');
-					// $(this).replaceWith(game.pieces[index]);
-					game.click = 0;
-					// $('.target').removeClass('piece');
-					$('.target').addClass("onBoard");
-				} // end if
+		}, // end of connect function
 
-			}); // end on click for .moveSpace
+		// does this function whenever a value in firebase changes
 
-		}, // end movePiece method
+		fireData: function() {
+			game.dataInfo.on('value', function(snapshot) {
+
+				console.log(snapshot.val());
+
+			}, function (errorObject) {
+				console.log("The read failed: " + errorObject.code);
+			})
+		},
 
 	} // Ends game object
 
-	// generates pieces on website
+	// When name is entered create an object in firebase with name losses wins and ties...in addition create text instead of login box that says, "Hi obj.name! You are player 1. (It's your turn![only after player 2 has joined])" or "Hi obj.name! You are player 2. You are waiting for player 1 to make their choice."....also prints obj.name, choices (r,p,s,l,sp[only after player 2 has logged in as well]), and wins, losses and ties in that order...Also highlights by changin the border color of the player whos turn it is. Once both have joined make turn counter in firebase.
 
-	game.genPieces();
-
-	// on click for targeting a piece to move
-
-	game.targetPiece();
-
-	// on click for moving a piece
-
-	game.movePiece();
-
+	game.connect();
+	
+	game.fireData();
 
 
 	// When name is entered create an object in firebase with name losses wins and ties...in addition create text instead of login box that says, "Hi obj.name! You are player 1. (It's your turn![only after player 2 has joined])" or "Hi obj.name! You are player 2. You are waiting for player 1 to make their choice."....also prints obj.name, choices (r,p,s,l,sp[only after player 2 has logged in as well]), and wins, losses and ties in that order...Also highlights by changin the border color of the player whos turn it is. Once both have joined make turn counter in firebase.
