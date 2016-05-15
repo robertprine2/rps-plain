@@ -5,7 +5,7 @@
 	<title>Rock Paper Scissors Lizard Spork</title>
 	<script src="https://code.jquery.com/jquery-2.2.3.js" integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4=" crossorigin="anonymous"></script>
 	<link rel="SHORTCUT ICON" href="assets/images/favicon.ico">
-	<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
 	<link rel="icon" href="assets/images/favicon.ico" type="image/ico">
 	<link href='https://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
@@ -26,21 +26,23 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<form id="nameForm">
-					<div class="form">
-				    	<input type="text" placeholder="Name" id="name-input"><br>
-				    </div>
+				<div id="nameForm">
+					<form>
+						<div class="form">
+				    		<input type="text" placeholder="Name" id="name-input"><br>
+				    	</div>
 				    
-				    <div class="form">
-				    	<input id="connect" type="submit" value="Submit">
-				    </div>
-			  	</form>
+				    	<div class="form">
+				    		<input id="connect" type="submit" value="Submit">
+				  	  	</div>
+			  		</form>
+			  	</div>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-sm-4" id="player1">
-				<p>Waiting for player 1...</p>
+				<p>Waiting for player 1</p>
 			</div>
 
 			<div class="col-sm-4" id="winner">
@@ -48,7 +50,7 @@
 			</div>
 
 			<div class="col-sm-4" id="player2">
-				<p>Waiting for player 2...</p>
+				<p>Waiting for player 2</p>
 			</div>
 		</div>
 
