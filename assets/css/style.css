@@ -32,6 +32,10 @@ h2 {
 	margin-top: 20px;
 }
 
+.heightHack {
+	height: 85%;
+}
+
 /* Game pieces */
 
 .piece {

@@ -71,40 +71,8 @@ $(document).ready(function(){
 					var full = snapshot.child(game.players).child(game.player2).exists();
 					game.assignPlayer(game.name, game.dataInfo, exists, full);
 
-					// *******replaces name input with 
-
-					$("#nameForm").html("Hi " + game.name + "! You are player " + game.player + ".");
+					
 				}); // end of game.dataInfo.once
-
-// **************	// pushes data to firebase
-
-// 				game.dataInfo.push({
-// 						name: game.name,
-// 						pick: game.pick,
-// 						wins: game.wins,
-// 						losses: game.losses,
-// 						ties: game.ties,
-// 						player: game.click
-// 				});
-
-// 				// ********Changes what is in player1 or player2 box
-
-// 					$("#player1").html("<h3>" + game.name + "</h3");
-
-// 					for (var i = 0; i < game.pieces.length; i++) {
-
-// 						var p = $('<button>');
-// 						p.addClass("piece");
-// 						p.attr('data-index', i);
-// 						p.attr('data-name', game.pieces[i].name);
-// 						p.append('<p>' + game.pieces[i].name + '</p>');
-// 						p.append(game.pieces[i].image);
-
-// 						$("#player1").append(p);
-
-// 					} // ends for loop
-
-// 					$("#player1").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
 				// Doesn't refresh the forms
 
@@ -120,6 +88,8 @@ $(document).ready(function(){
 
 			var playersRef = game.dataInfo.child(game.players);
 
+			// if player 2
+
 			if (exists && !full) {
 				
 				var player2Ref = playersRef.child(game.player2);
@@ -130,7 +100,12 @@ $(document).ready(function(){
 					losses: game.losses,
 					ties: game.ties
 				});
-			} // end if exists and not full
+
+				game.changeDom2();
+
+			} // end if exists and not full (player2)
+
+			// else if no spots are left (already two people playing)
 
 			else if(full) {
 				
@@ -150,15 +125,93 @@ $(document).ready(function(){
 					ties: game.ties
 				});
 
+				game.changeDom1();
+
 			} // end of else player1
 
 		}, // end of assignPlayer function
+
+		changeDom1: function() {
+
+			// changes the dom to match changes in firebase for player 1
+
+			game.dataInfo.once("value", function(snapshot) {
+
+				// replaces name input with 
+
+				$("#nameForm").html("Hi " + game.name + "! You are player 1.");
+
+				// Changes what is in player1
+
+				$("#wait1").html("<h3>" + game.name + "</h3");
+
+				for (var i = 0; i < game.pieces.length; i++) {
+
+					var p = $('<button>');
+					p.addClass("piece");
+					p.attr('data-index', i);
+					p.attr('data-name', game.pieces[i].name);
+					p.append('<p>' + game.pieces[i].name + '</p>');
+					p.append(game.pieces[i].image);
+
+					$("#choices1").append(p);
+
+				} // ends for loop
+
+				$("#score1").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+			});
+
+		}, // End of changeDom1 function
+
+		changeDom2: function() {
+
+			// changes the dom to match changes in firebase for player 2
+
+			game.dataInfo.once("value", function(snapshot) {
+
+				// replaces name input with 
+
+				$("#nameForm").html("Hi " + game.name + "! You are player 2.");
+
+				// Changes what is in player2
+
+				$("#wait2").html("<h3>" + game.name + "</h3");
+
+				for (var i = 0; i < game.pieces.length; i++) {
+
+					var p = $('<button>');
+					p.addClass("piece");
+					p.attr('data-index', i);
+					p.attr('data-name', game.pieces[i].name);
+					p.append('<p>' + game.pieces[i].name + '</p>');
+					p.append(game.pieces[i].image);
+
+					$("#choices2").append(p);
+
+				} // ends for loop
+
+				$("#score2").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				// prints player 1's name over "waiting for player 1"
+
+				$("#wait1").html("<h3>" + snapshot.val().players[1].name + "</h3");
+
+				$("#choices1").addClass('heightHack');
+
+				$("#score1").append("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
+
+				console.log(snapshot.val().players[2].name);
+
+			});
+
+		}, // End of changeDom2 function
 
 		// logic for who wins in the game
 
 		// logic: function() {
 
-		// 	if (game.pick)
+		// if (game.pick)
 
 		// }, // end of logic function
 
