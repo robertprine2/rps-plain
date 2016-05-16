@@ -160,6 +160,10 @@ $(document).ready(function(){
 
 				$("#score1").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
+				// prints player 2's information to DOM
+
+				game.player2Here();
+
 			});
 
 		}, // End of changeDom1 function
@@ -193,19 +197,55 @@ $(document).ready(function(){
 
 				$("#score2").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
-				// prints player 1's name over "waiting for player 1"
+				// prints player 1's name over "waiting for player 1" in player 2's DOM
 
 				$("#wait1").html("<h3>" + snapshot.val().players[1].name + "</h3");
 
+				// make player 2's DOM change the div height to keep score at the bottom for player 1
+
 				$("#choices1").addClass('heightHack');
 
-				$("#score1").append("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
+				// change player 2's DOM score for player 1
 
-				console.log(snapshot.val().players[2].name);
+				$("#score1").append("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
 
 			});
 
 		}, // End of changeDom2 function
+
+		// checks if player2 has joined then updates player1's DOM with player 2's information
+
+		player2Here: function() {
+
+			// ******updates on all value changes. This could be a waste of space, but if I use once it hits before player 2 joins and then doesn't listen anymore.
+
+			game.dataInfo.on("value", function(snapshot) {
+
+				// variable to see if player2 is in firebase
+
+				var full = snapshot.child(game.players).child(game.player2).exists();
+
+				// if player 2 is in firebase then run this code
+
+				if (full) {
+
+					// change player 1's DOM name for player 2
+
+					$("#wait2").html("<h3>" + snapshot.val().players[2].name + "</h3");
+
+					// make player 1's DOM change the div height to keep score at the bottom for player 2
+
+					$("#choices2").addClass('heightHack');
+
+					// change player 1's DOM score for player 2
+
+					$("#score2").append("<p>Wins: "+ snapshot.val().players[2].wins + " Losses: " + snapshot.val().players[2].losses + " Ties: " + snapshot.val().players[2].ties + "</p>");
+
+				} // End of if statment that checks if player 2 is in firebase
+
+			}); // End of dataInfo once
+
+		}, // End of player2Here function
 
 		// logic for who wins in the game
 
