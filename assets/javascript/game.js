@@ -158,7 +158,7 @@ $(document).ready(function(){
 
 				} // ends for loop
 
-				$("#score1").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
 				// prints player 2's information to DOM
 
@@ -195,7 +195,7 @@ $(document).ready(function(){
 
 				} // ends for loop
 
-				$("#score2").append("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+				$("#score2").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
 				// prints player 1's name over "waiting for player 1" in player 2's DOM
 
@@ -207,7 +207,7 @@ $(document).ready(function(){
 
 				// change player 2's DOM score for player 1
 
-				$("#score1").append("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
+				$("#score1").html("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
 
 			});
 
@@ -239,7 +239,11 @@ $(document).ready(function(){
 
 					// change player 1's DOM score for player 2
 
-					$("#score2").append("<p>Wins: "+ snapshot.val().players[2].wins + " Losses: " + snapshot.val().players[2].losses + " Ties: " + snapshot.val().players[2].ties + "</p>");
+					$("#score2").html("<p>Wins: "+ snapshot.val().players[2].wins + " Losses: " + snapshot.val().players[2].losses + " Ties: " + snapshot.val().players[2].ties + "</p>");
+
+					// calls choice function so player1 can choose a button, then player 2, then logic is run
+
+					game.choice();
 
 				} // End of if statment that checks if player 2 is in firebase
 
@@ -247,13 +251,103 @@ $(document).ready(function(){
 
 		}, // End of player2Here function
 
+		// Player 1 and Player 2 pick rock, paper, scissors, lizard, or spork
+
+		choice: function() {
+
+			game.dataInfo.on("value", function(snapshot) {
+
+				var playersRef = game.dataInfo.child(game.players);
+
+				var player1Ref = playersRef.child(game.player1);
+
+				var player2Ref = playersRef.child(game.player2);
+
+				// if player 1 hasn't picked
+
+				if (game.turn == 1) {
+
+					// on click for player 1 choice
+
+					$("#choices1").on('click', '.piece', function() {
+
+						// updates the pick for player 1 in firebase
+
+						player1Ref.update({pick: $(this).data('name')});
+
+						$('#choices1').children().not(this).hide();
+
+						console.log(this);
+
+					}); // end of on click for player 1 choice
+
+				} // end of if player 1 hasn't picked
+
+				// else if player 1 has picked so player 2 can now pick
+
+				else if (snapshot.val().players[1].pick != "") {
+
+					// on click for player 2 choice
+
+					$('#choices2').on('click', '.piece', function() {
+
+						// updates the pick for player 2 in firebase
+
+						player1Ref.update({pick: $(this).data('name')});
+
+					}); // end of click for player 2 choice	
+
+				} // end else if player 1 has picked
+
+				// both playrs have picked
+
+				else {
+
+					var p1 = snapshot.val().players[1].pick;
+
+					var p2 = snapshot.val().players[2].pick;
+
+					console.log(p1, p2);
+
+					// goes through who wins once player 2 has picked
+
+					game.logic(p1, p2);
+
+				} // end of else both players have picked
+
+			}); // end of dataInfo		
+
+		}, // end of choice function
+
 		// logic for who wins in the game
 
-		// logic: function() {
+		logic: function(p1, p2) {
 
-		// if (game.pick)
+			game.dataInfo.on("value", function(snapshot) {
 
-		// }, // end of logic function
+			// variable to see if player2 is in firebase
+
+				var full = snapshot.child(game.players).child(game.player2).exists();
+
+				// if player 2 has made a pick
+
+				if (full) {
+
+					// make less typing for me
+
+					var p1 = snapshot.val().players[1].pick;
+
+					var p2 = snapshot.val().players[2].pick;
+
+					console.log(p1, p2);
+				
+					//if (p.players)
+
+				} // end of if player 2 has made a pick
+
+			}); // end of dataInfo on
+
+		}, // end of logic function
 
 	} // Ends game object
 
@@ -266,6 +360,8 @@ $(document).ready(function(){
 	// Player 1 picks their choice showing them what they chose, but not player 2. Their choice is added to firebase. The turn counter goes up highlighting the other players play area.
 
 	// PLayer 2 picks and their play area is updated with their choice. Their choice is added to firebase. This triggers the showing of both players choices in their respective boxes and who won in the middle box. This also makes the win/loss/tie counters go up
+
+	
 
 	// After a period of 5ish seconds it the game resets back to after both players logged in, but wins and losses stay the same
 
