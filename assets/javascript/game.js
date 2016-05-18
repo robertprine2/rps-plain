@@ -47,7 +47,7 @@ $(document).ready(function(){
 
 		ties2: 0,
 
-		turn: 1,
+		turn: 0,
 
 		players: 'players',
 
@@ -60,7 +60,9 @@ $(document).ready(function(){
 		connect: function() {
 
 			$("#connect").on('click', function() {
-
+game.dataInfo.update({
+	turn: game.turn
+}); //  end firebase update
 				// assigns user input as game.name
 
 				game.name = $("#name-input").val().trim();
@@ -138,6 +140,7 @@ $(document).ready(function(){
 			game.dataInfo.once("value", function(snapshot) {
 
 				// replaces name input with 
+				game.turn = snapshot.val().turn;
 
 				$("#nameForm").html("Hi " + game.name + "! You are player 1.");
 
@@ -159,6 +162,8 @@ $(document).ready(function(){
 				} // ends for loop
 
 				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#disconnect1").html("<button id='disconnectBut1'>Disconnect</button>");
 
 				// prints player 2's information to DOM
 
@@ -205,6 +210,8 @@ $(document).ready(function(){
 
 				$("#choices1").addClass('heightHack');
 
+				$("#disconnect2").html("<button id='disconnectBut2'>Disconnect</button>");
+
 				// change player 2's DOM score for player 1
 
 				$("#score1").html("<p>Wins: "+ snapshot.val().players[1].wins + " Losses: " + snapshot.val().players[1].losses + " Ties: " + snapshot.val().players[1].ties + "</p>");
@@ -241,10 +248,6 @@ $(document).ready(function(){
 
 					$("#score2").html("<p>Wins: "+ snapshot.val().players[2].wins + " Losses: " + snapshot.val().players[2].losses + " Ties: " + snapshot.val().players[2].ties + "</p>");
 
-					// calls choice function so player1 can choose a button, then player 2, then logic is run
-
-					game.choice();
-
 				} // End of if statment that checks if player 2 is in firebase
 
 			}); // End of dataInfo once
@@ -255,15 +258,21 @@ $(document).ready(function(){
 
 		choice: function() {
 
-			game.dataInfo.on("value", function(snapshot) {
-
 				var playersRef = game.dataInfo.child(game.players);
 
 				var player1Ref = playersRef.child(game.player1);
 
 				var player2Ref = playersRef.child(game.player2);
 
-				// if player 1 hasn't picked
+				// add turn to firebase
+
+				game.turn++;
+
+				game.dataInfo.update({
+					turn: game.turn
+				}); //  end firebase update				
+
+				// if it is turn 1 then player 1 picks
 
 				if (game.turn == 1) {
 
@@ -277,77 +286,121 @@ $(document).ready(function(){
 
 						$('#choices1').children().not(this).hide();
 
-						console.log(this);
+						game.turn++;
+
+						// update turn to firebase
+
+						game.dataInfo.update({
+							turn: game.turn
+						}); //  end firebase update
 
 					}); // end of on click for player 1 choice
 
 				} // end of if player 1 hasn't picked
 
-				// else if player 1 has picked so player 2 can now pick
+				// if it is turn 2 then player 2 picks
 
-				else if (snapshot.val().players[1].pick != "") {
-
+				if (game.turn == 2) {
+console.log("I made it!");
 					// on click for player 2 choice
 
 					$('#choices2').on('click', '.piece', function() {
 
 						// updates the pick for player 2 in firebase
 
-						player1Ref.update({pick: $(this).data('name')});
+						player2Ref.update({pick: $(this).data('name')});
+
+						$('#choices2').children().not(this).hide();
+
+						game.turn++;
+
+						// update turn to firebase
+
+						game.dataInfo.update({
+							turn: game.turn
+						}); //  end firebase update
 
 					}); // end of click for player 2 choice	
 
-				} // end else if player 1 has picked
-
-				// both playrs have picked
-
-				else {
-
-					var p1 = snapshot.val().players[1].pick;
-
-					var p2 = snapshot.val().players[2].pick;
-
-					console.log(p1, p2);
-
-					// goes through who wins once player 2 has picked
-
-					game.logic(p1, p2);
-
-				} // end of else both players have picked
-
-			}); // end of dataInfo		
+				} // end if it is turn 2 then player 2 picks
 
 		}, // end of choice function
+
+		// updates local variables within game object from firebase
+
+		updateVar: function () {
+
+			game.dataInfo.on("value", function(snapshot) {
+
+				game.turn = snapshot.val().turn;
+				console.log(game.turn);
+				game.pick = snapshot.val().players[1].pick;
+				console.log(game.pick);
+				game.pick2 = snapshot.val().players[2].pick;
+				console.log(game.pick2);
+				game.wins = snapshot.val().players[1].wins;
+				console.log(game.wins);
+				game.losses = snapshot.val().players[1].losses;
+				console.log(game.losses);
+				game.ties = snapshot.val().players[1].ties;
+				console.log(game.ties);
+				game.wins2 = snapshot.val().players[2].wins;
+				console.log(game.wins2);
+				game.losses2 = snapshot.val().players[2].losses;
+				console.log(game.losses2);
+				game.ties2 = snapshot.val().players[2].ties;
+				console.log(game.ties2);
+			});
+
+		}, // end updateVar function
 
 		// logic for who wins in the game
 
 		logic: function(p1, p2) {
+			// if (turn == 3) {
 
-			game.dataInfo.on("value", function(snapshot) {
+			// }
+			// game.dataInfo.on("value", function(snapshot) {
 
-			// variable to see if player2 is in firebase
+			// // variable to see if player2 is in firebase
 
-				var full = snapshot.child(game.players).child(game.player2).exists();
+			// 	var full = snapshot.child(game.players).child(game.player2).exists();
 
-				// if player 2 has made a pick
+			// 	// if player 2 has made a pick
 
-				if (full) {
+			// 	if (full) {
 
-					// make less typing for me
+			// 		// make less typing for me
 
-					var p1 = snapshot.val().players[1].pick;
+			// 		var p1 = snapshot.val().players[1].pick;
 
-					var p2 = snapshot.val().players[2].pick;
+			// 		var p2 = snapshot.val().players[2].pick;
 
-					console.log(p1, p2);
+			// 		console.log(p1, p2);
 				
-					//if (p.players)
+			// 		if (p1 == p2) {
 
-				} // end of if player 2 has made a pick
+			// 		}
 
-			}); // end of dataInfo on
+			// 	} // end of if player 2 has made a pick
+
+			// }); // end of dataInfo on
 
 		}, // end of logic function
+
+		disconnect: function () {
+
+			$("#disconnectBut").on('click', function() {
+
+				var playersRef = game.dataInfo.child(game.players);
+				var player1Ref = playersRef.child(game.player1);
+				var player2Ref = playersRef.child(game.player2);
+				
+				// if (game.player1 == )
+
+			});
+
+		},
 
 	} // Ends game object
 
@@ -356,6 +409,14 @@ $(document).ready(function(){
 	// When name is entered create an object in firebase with name losses wins and ties...in addition create text instead of login box that says, "Hi obj.name! You are player 1. (It's your turn![only after player 2 has joined])" or "Hi obj.name! You are player 2. You are waiting for player 1 to make their choice."....also prints obj.name, choices (r,p,s,l,sp[only after player 2 has logged in as well]), and wins, losses and ties in that order...Also highlights by changin the border color of the player whos turn it is. Once both have joined make turn counter in firebase.
 
 	game.connect();
+
+	// calls choice function so player1 can choose a button, then player 2, then logic is run
+
+	game.choice();
+
+	// updates game variables
+
+	game.updateVar();
 
 	// Player 1 picks their choice showing them what they chose, but not player 2. Their choice is added to firebase. The turn counter goes up highlighting the other players play area.
 
