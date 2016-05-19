@@ -258,73 +258,76 @@ game.dataInfo.update({
 
 		choice: function() {
 
-				var playersRef = game.dataInfo.child(game.players);
+			var playersRef = game.dataInfo.child(game.players);
 
-				var player1Ref = playersRef.child(game.player1);
+			var player1Ref = playersRef.child(game.player1);
 
-				var player2Ref = playersRef.child(game.player2);
+			// add turn to firebase
 
-				// add turn to firebase
+			game.turn++;
+
+			game.dataInfo.update({
+				turn: game.turn
+			}); //  end firebase update				
+
+			// if it is turn 1 then player 1 picks
+
+			if (game.turn == 1) {
+
+				// on click for player 1 choice
+
+				$("#choices1").on('click', '.piece', function() {
+
+					// updates the pick for player 1 in firebase
+
+					player1Ref.update({pick: $(this).data('name')});
+
+					$('#choices1').children().not(this).hide();
+
+					game.turn++;
+
+					// update turn to firebase
+
+					game.dataInfo.update({
+						turn: game.turn
+					}); //  end firebase update
+
+				}); // end of on click for player 1 choice
+
+			} // end of if player 1 hasn't picked
+
+		}, // end of choice function	
+
+		choice2: function() {
+console.log("I made it!");
+
+			var playersRef = game.dataInfo.child(game.players);
+
+			var player2Ref = playersRef.child(game.player2);
+
+			// on click for player 2 choice
+
+			$('#choices2').on('click', '.piece', function() {
+
+				// updates the pick for player 2 in firebase
+
+				player2Ref.update({pick: $(this).data('name')});
+
+				$('#choices2').children().not(this).hide();
 
 				game.turn++;
 
+				// update turn to firebase
+
 				game.dataInfo.update({
 					turn: game.turn
-				}); //  end firebase update				
+				}); //  end firebase update
 
-				// if it is turn 1 then player 1 picks
+				//******** call logic
 
-				if (game.turn == 1) {
+			}); // end of click for player 2 choice	
 
-					// on click for player 1 choice
-
-					$("#choices1").on('click', '.piece', function() {
-
-						// updates the pick for player 1 in firebase
-
-						player1Ref.update({pick: $(this).data('name')});
-
-						$('#choices1').children().not(this).hide();
-
-						game.turn++;
-
-						// update turn to firebase
-
-						game.dataInfo.update({
-							turn: game.turn
-						}); //  end firebase update
-
-					}); // end of on click for player 1 choice
-
-				} // end of if player 1 hasn't picked
-
-				// if it is turn 2 then player 2 picks
-
-				if (game.turn == 2) {
-console.log("I made it!");
-					// on click for player 2 choice
-
-					$('#choices2').on('click', '.piece', function() {
-
-						// updates the pick for player 2 in firebase
-
-						player2Ref.update({pick: $(this).data('name')});
-
-						$('#choices2').children().not(this).hide();
-
-						game.turn++;
-
-						// update turn to firebase
-
-						game.dataInfo.update({
-							turn: game.turn
-						}); //  end firebase update
-
-					}); // end of click for player 2 choice	
-
-				} // end if it is turn 2 then player 2 picks
-
-		}, // end of choice function
+		}, // end of choice2 function
 
 		// updates local variables within game object from firebase
 
@@ -350,6 +353,13 @@ console.log("I made it!");
 				console.log(game.losses2);
 				game.ties2 = snapshot.val().players[2].ties;
 				console.log(game.ties2);
+
+				// if it is turn 2 then player 2 picks
+
+				if (game.turn == 2) {
+					game.choice2();
+				} // end if it is turn 2 then player 2 picks
+
 			});
 
 		}, // end updateVar function
@@ -390,13 +400,15 @@ console.log("I made it!");
 
 		disconnect: function () {
 
-			$("#disconnectBut").on('click', function() {
+			$("#disconnectBut1").on('click', function() {
 
 				var playersRef = game.dataInfo.child(game.players);
 				var player1Ref = playersRef.child(game.player1);
 				var player2Ref = playersRef.child(game.player2);
 				
-				// if (game.player1 == )
+				playersRef.remove();
+
+				game.data.Info.child(turn)
 
 			});
 
