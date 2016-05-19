@@ -861,9 +861,9 @@ $(document).ready(function(){
 				
 				player1Ref.remove();
 // ******not working
-				game.dataInfo.child(turn).remove();
+				// game.dataInfo.child(turn).remove();
 // ******not working
-				window.location.href=window.location.href
+				location.reload();
 
 			});
 
@@ -875,9 +875,9 @@ $(document).ready(function(){
 // ******not working				
 				player2Ref.remove();
 // ******not working
-				game.dataInfo.child(turn).remove();
+				// game.dataInfo.child(turn).remove();
 
-				window.location.href=window.location.href
+				location.reload();
 
 			});
 
