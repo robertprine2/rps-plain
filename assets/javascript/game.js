@@ -360,41 +360,42 @@ console.log("I made it!");
 					game.choice2();
 				} // end if it is turn 2 then player 2 picks
 
-			});
+				// if both players have picked compare choices
+
+				if (game.turn == 3) {
+					game.logic();
+				} // end of if turn 3
+
+			}); // end dataInfo value
 
 		}, // end updateVar function
 
 		// logic for who wins in the game
 
 		logic: function(p1, p2) {
-			// if (turn == 3) {
+			
+			game.dataInfo.on("value", function(snapshot) {
 
-			// }
-			// game.dataInfo.on("value", function(snapshot) {
+				// make less typing for me
 
-			// // variable to see if player2 is in firebase
+				var p1 = snapshot.val().players[1].pick;
 
-			// 	var full = snapshot.child(game.players).child(game.player2).exists();
+				var p2 = snapshot.val().players[2].pick;
 
-			// 	// if player 2 has made a pick
+				console.log(p1, p2);
+			
+				// if it's a tie
 
-			// 	if (full) {
+				if (p1 == p2) {
 
-			// 		// make less typing for me
+					// put "It's a tie!" on the DOM
 
-			// 		var p1 = snapshot.val().players[1].pick;
+					$('#winner').html("<h5>It's a tie!</h5>");
 
-			// 		var p2 = snapshot.val().players[2].pick;
 
-			// 		console.log(p1, p2);
-				
-			// 		if (p1 == p2) {
+				} // end of if tie
 
-			// 		}
-
-			// 	} // end of if player 2 has made a pick
-
-			// }); // end of dataInfo on
+			}); // end of dataInfo value
 
 		}, // end of logic function
 
