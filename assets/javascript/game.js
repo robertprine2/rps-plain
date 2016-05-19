@@ -10,6 +10,8 @@ $(document).ready(function(){
 
 		dataInfo: new Firebase("https://rpslsp.firebaseio.com/"),
 
+		dataChat: new Firebase("https://chatrps.firebaseio.com/"),
+
 		// Array with game pieces
 
 		pieces: [
@@ -26,6 +28,12 @@ $(document).ready(function(){
 			],
 
 		// variables used for player objects
+
+		time: "",
+
+		myName: "",
+
+		message: "",
 
 		userId: "",
 
@@ -68,6 +76,8 @@ $(document).ready(function(){
 				// assigns user input as game.name
 
 				game.name = $("#name-input").val().trim();
+
+				game.myname = $("#name-input").val().trim();
 
 				game.dataInfo.once("value", function(snapshot) {
 
@@ -873,6 +883,52 @@ $(document).ready(function(){
 
 		},
 
+		// chat send button
+
+		chatSend: function() {
+			$('#send').on('click', function() {
+
+				var typed = $("#message").val().trim();
+
+				var time = Firebase.ServerValue.TIMESTAMP
+
+				game.message = game.myname + ": " + typed;
+
+				game.dataChat.push({
+					message: game.message,
+					time: time
+				})
+
+				document.getElementById("message").value = "";
+
+				return false;
+
+			});// end of on click #send
+
+		}, // end of chatSend function
+
+		chatUpdateLocal: function() {
+
+			game.dataChat.orderByChild("time").on('child_added', function(snapshot) {
+
+				console.log(snapshot.val())
+				game.message = snapshot.val().message;
+				game.time = snapshot.val().time;
+
+				game.chatPrint();
+
+				
+			}); // end dataChat on childAdded
+		}, // end chatPrint function
+
+		chatPrint: function() {
+
+			var chatTime = moment(game.time).format("MMM DD, YYYY hh:mm:ss");
+
+			$('#history').append(chatTime + " " + game.message + "<br>");
+
+		},
+
 	} // Ends game object
 
 	
@@ -892,6 +948,14 @@ $(document).ready(function(){
 	// enables disconnect buttons
 
 	game.disconnect();
+
+	// enables chatSend function
+
+	game.chatSend();
+
+	// updates local variables from firebase
+
+	game.chatUpdateLocal();
 
 	// Player 1 picks their choice showing them what they chose, but not player 2. Their choice is added to firebase. The turn counter goes up highlighting the other players play area.
 

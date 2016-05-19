@@ -8,6 +8,9 @@ h1 {
 	font-family: 'Droid Serif', serif;
 	font-size: 40px;
 	margin: 15px;
+	background-color: black;
+	color: white;
+	padding: 10px;
 }
 
 h2 {
@@ -51,6 +54,17 @@ button img {
 
 .target img {
 	border: solid 2px red;
+}
+
+/* Chat */
+
+#history {
+	border: solid 3px blue;
+	margin-left: 10px;
+	height: 150px;
+	overflow-y: scroll;
+	margin-top: 10px;
+	text-align: left;
 }
 
 /* Social Icons */
