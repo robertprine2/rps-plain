@@ -168,6 +168,8 @@ $(document).ready(function(){
 
 				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
+				$('#winner').html("<p>It is " + game.name + "'s turn.</p>")
+
 				$("#disconnect1").html("<button id='disconnectBut1'>Disconnect</button>");
 
 				// prints player 2's information to DOM
@@ -183,6 +185,8 @@ $(document).ready(function(){
 			// changes the dom to match changes in firebase for player 2
 
 			game.dataInfo.once("value", function(snapshot) {
+
+				$('#winner').html("<p>It is " + game.name + "'s turn.</p>")
 
 				// replaces name input with 
 
@@ -315,6 +319,8 @@ $(document).ready(function(){
 		}, // end of choice function	
 
 		choice2: function() {
+
+			$('#winner').html("<p>It is " + game.name2 + "'s turn.</p>")
 
 			var playersRef = game.dataInfo.child(game.players);
 
@@ -708,7 +714,7 @@ $(document).ready(function(){
 
 			// if p1 spork loses
 
-			if ((p1 == 'spork' && p2 == 'scissors') 
+			if ((p1 == 'spork' && p2 == 'paper') 
 				|| (p1 == 'spork' && p2 == 'lizard')) {
 
 				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
@@ -733,7 +739,7 @@ $(document).ready(function(){
 
 				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
 
-			} // end of if p1 paper loses
+			} // end of if p1 spork loses
 
 			// if player 1
 
@@ -799,6 +805,8 @@ $(document).ready(function(){
 
 			} // ends for loop
 
+			$('#winner').html("<p>It is " + game.name + "'s turn.</p>")
+
 		}, // end of reset function
 
 		// changes the dom to match changes in firebase for player 2
@@ -829,6 +837,8 @@ $(document).ready(function(){
 
 			} // ends for loop
 
+			$('#winner').html("<p>It is " + game.name + "'s turn.</p>")
+
 		}, // end of reset2 function
 
 		disconnect: function () {
@@ -840,9 +850,9 @@ $(document).ready(function(){
 				var player2Ref = playersRef.child(game.player2);
 				
 				player1Ref.remove();
-
-				game.dataInfo.turn.remove();
-
+// ******not working
+				game.dataInfo.child(turn).remove();
+// ******not working
 				window.location.href=window.location.href
 
 			});
@@ -852,10 +862,10 @@ $(document).ready(function(){
 				var playersRef = game.dataInfo.child(game.players);
 				var player1Ref = playersRef.child(game.player1);
 				var player2Ref = playersRef.child(game.player2);
-				
+// ******not working				
 				player2Ref.remove();
-
-				game.dataInfo.turn.remove();
+// ******not working
+				game.dataInfo.child(turn).remove();
 
 				window.location.href=window.location.href
 
