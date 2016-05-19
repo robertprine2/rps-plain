@@ -157,6 +157,7 @@ game.dataInfo.update({
 					p.append('<p>' + game.pieces[i].name + '</p>');
 					p.append(game.pieces[i].image);
 
+					$("#choices1").addClass('heightHack');
 					$("#choices1").append(p);
 
 				} // ends for loop
@@ -181,11 +182,11 @@ game.dataInfo.update({
 
 				// replaces name input with 
 
-				$("#nameForm").html("Hi " + game.name + "! You are player 2.");
+				$("#nameForm").html("Hi " + game.name2 + "! You are player 2.");
 
 				// Changes what is in player2
 
-				$("#wait2").html("<h3>" + game.name + "</h3");
+				$("#wait2").html("<h3>" + game.name2 + "</h3");
 
 				for (var i = 0; i < game.pieces.length; i++) {
 
@@ -196,6 +197,7 @@ game.dataInfo.update({
 					p.append('<p>' + game.pieces[i].name + '</p>');
 					p.append(game.pieces[i].image);
 
+					$("#choices2").addClass('heightHack');
 					$("#choices2").append(p);
 
 				} // ends for loop
@@ -282,7 +284,15 @@ game.dataInfo.update({
 
 					player1Ref.update({pick: $(this).data('name')});
 
+					// hides all choices but player pick
+
 					$('#choices1').children().not(this).hide();
+
+					// saves button
+// ****** tried to allow for you to see opponents button they chose
+					// $(this).addClass('p1Pick');
+
+					// $(this).attr('data-pick', game.pieces[$(this).data('index')]);
 
 					game.turn++;
 
@@ -299,7 +309,6 @@ game.dataInfo.update({
 		}, // end of choice function	
 
 		choice2: function() {
-console.log("I made it!");
 
 			var playersRef = game.dataInfo.child(game.players);
 
@@ -313,6 +322,14 @@ console.log("I made it!");
 
 				player2Ref.update({pick: $(this).data('name')});
 
+				// saves button for pick
+// ****** tried to allow for you to see opponents button they chose
+				// $(this).addClass('p2Pick');
+
+				// $(this).attr('data-pick', game.pieces[$(this).data('index')]);
+
+				// hides all choices but player pick
+
 				$('#choices2').children().not(this).hide();
 
 				game.turn++;
@@ -322,8 +339,6 @@ console.log("I made it!");
 				game.dataInfo.update({
 					turn: game.turn
 				}); //  end firebase update
-
-				//******** call logic
 
 			}); // end of click for player 2 choice	
 
@@ -353,7 +368,8 @@ console.log("I made it!");
 				console.log(game.losses2);
 				game.ties2 = snapshot.val().players[2].ties;
 				console.log(game.ties2);
-
+				game.name = snapshot.val().players[1].name;
+				game.name2 = snapshot.val().players[2].name;
 				// if it is turn 2 then player 2 picks
 
 				if (game.turn == 2) {
@@ -372,30 +388,56 @@ console.log("I made it!");
 
 		// logic for who wins in the game
 
-		logic: function(p1, p2) {
+		logic: function() {
+
+			// make less typing for me
+
+			var p1 = game.pick;
+
+			var p2 = game.pick2;
+
+			var playersRef = game.dataInfo.child(game.players);
+
+			var player1Ref = playersRef.child(game.player1);
+
+			var player2Ref = playersRef.child(game.player2);
+
+			game.turn++;
+
+			game.dataInfo.update({
+				turn: game.turn
+			}); //  end firebase update
 			
-			game.dataInfo.on("value", function(snapshot) {
+		
+			// if it's a tie
 
-				// make less typing for me
+			if (p1 == p2) {
 
-				var p1 = snapshot.val().players[1].pick;
+				// put "It's a tie!" on the DOM
 
-				var p2 = snapshot.val().players[2].pick;
+				$('#winner').html("<h5>It's a tie!</h5>");
 
-				console.log(p1, p2);
-			
-				// if it's a tie
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
 
-				if (p1 == p2) {
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+console.log(game.name2);
+				game.ties++;
 
-					// put "It's a tie!" on the DOM
+				player1Ref.update({
+					ties: game.ties
+				}); //  end firebase update
 
-					$('#winner').html("<h5>It's a tie!</h5>");
+				game.ties2++;
 
+				player2Ref.update({
+					ties: game.ties2
+				}); //  end firebase update
 
-				} // end of if tie
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
 
-			}); // end of dataInfo value
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if tie
 
 		}, // end of logic function
 
