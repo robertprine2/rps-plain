@@ -60,9 +60,9 @@ $(document).ready(function(){
 		connect: function() {
 
 			$("#connect").on('click', function() {
-game.dataInfo.update({
-	turn: game.turn
-}); //  end firebase update
+				game.dataInfo.update({
+					turn: game.turn
+				}); //  end firebase update
 				// assigns user input as game.name
 
 				game.name = $("#name-input").val().trim();
@@ -382,6 +382,12 @@ game.dataInfo.update({
 					game.logic();
 				} // end of if turn 3
 
+				// if the turns reset call reset player2 dom
+
+				if (game.turn == 0) {
+					game.reset2();
+				} // end of if turn 0
+
 			}); // end dataInfo value
 
 		}, // end updateVar function
@@ -420,7 +426,7 @@ game.dataInfo.update({
 				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
 
 				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
-console.log(game.name2);
+
 				game.ties++;
 
 				player1Ref.update({
@@ -439,7 +445,180 @@ console.log(game.name2);
 
 			} // end of if tie
 
+			// if p1 scissors wins
+
+			if ((p1 == 'scissors' && p2 == 'paper') 
+				|| (p1 == 'scissors' && p2 == 'lizard')) {
+
+				$('#winner').html("<h5>" + game.name + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.wins++;
+
+				player1Ref.update({
+					wins: game.wins
+				}); //  end firebase update
+
+				game.losses2++;
+
+				player2Ref.update({
+					losses: game.losses2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 scissors wins
+
+			// if p1 scissors loses
+
+			if ((p1 == 'scissors' && p2 == 'rock') 
+				|| (p1 == 'scissors' && p2 == 'spork')) {
+
+				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.losses++;
+
+				player1Ref.update({
+					losses: game.losses
+				}); //  end firebase update
+
+				game.wins2++;
+
+				player2Ref.update({
+					wins: game.wins2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 scissors loses
+
+			setTimeout(function() {
+				game.reset(); }, 5000);
+
 		}, // end of logic function
+
+		reset: function() {
+
+			var playersRef = game.dataInfo.child(game.players);
+
+			var player1Ref = playersRef.child(game.player1);
+
+			var player2Ref = playersRef.child(game.player2);
+
+			player1Ref.update({
+				pick: ""
+			});
+
+			player2Ref.update({
+				pick: ""
+			});
+
+			game.dataInfo.update({
+				turn: 0
+			});
+
+			// changes the dom to match changes in firebase for player 1
+
+			$("#nameForm").html("Hi " + game.name + "! You are player 1.");
+
+			// Empties the #winner div
+
+			$("#winner").html("");
+
+			// Changes what is in player1
+
+			$("#wait1").html("<h3>" + game.name + "</h3");
+
+			// empties the choice paragraph before adding buttons
+
+			$('#choices1').html("");
+
+			for (var i = 0; i < game.pieces.length; i++) {
+
+				var p = $('<button>');
+				p.addClass("piece");
+				p.attr('data-index', i);
+				p.attr('data-name', game.pieces[i].name);
+				p.append('<p>' + game.pieces[i].name + '</p>');
+				p.append(game.pieces[i].image);
+
+				$("#choices1").addClass('heightHack');
+				$("#choices1").append(p);
+
+			} // ends for loop
+
+			$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+			$("#disconnect1").html("<button id='disconnectBut1'>Disconnect</button>");
+
+			// prints player 2's information to DOM
+
+			game.player2Here();
+
+		}, // end of reset function
+
+		// changes the dom to match changes in firebase for player 2
+
+		reset2: function() {
+
+			// replaces name input with 
+
+			$("#nameForm").html("Hi " + game.name2 + "! You are player 2.");
+
+			// Empties the #winner div
+
+			$("#winner").html("");
+
+			// Changes what is in player2
+
+			$("#wait2").html("<h3>" + game.name2 + "</h3");
+
+			// empties the choice paragraph before adding buttons
+
+			$('#choices2').html("");
+
+			for (var i = 0; i < game.pieces.length; i++) {
+
+				var p = $('<button>');
+				p.addClass("piece");
+				p.attr('data-index', i);
+				p.attr('data-name', game.pieces[i].name);
+				p.append('<p>' + game.pieces[i].name + '</p>');
+				p.append(game.pieces[i].image);
+
+				$("#choices2").addClass('heightHack');
+				$("#choices2").append(p);
+
+			} // ends for loop
+
+			$("#score2").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+			// prints player 1's name over "waiting for player 1" in player 2's DOM
+
+			$("#wait1").html("<h3>" + game.name + "</h3");
+
+			// make player 2's DOM change the div height to keep score at the bottom for player 1
+
+			$("#choices1").addClass('heightHack');
+
+			$("#disconnect2").html("<button id='disconnectBut2'>Disconnect</button>");
+
+			// change player 2's DOM score for player 1
+
+			$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+		}, // end of reset2 function
 
 		disconnect: function () {
 
