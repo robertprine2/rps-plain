@@ -27,6 +27,8 @@ $(document).ready(function(){
 
 		// variables used for player objects
 
+		userId: "",
+
 		name: "",
 
 		pick: "",
@@ -139,6 +141,8 @@ $(document).ready(function(){
 
 			game.dataInfo.once("value", function(snapshot) {
 
+				game.userId = 1;
+
 				// replaces name input with 
 				game.turn = snapshot.val().turn;
 
@@ -183,6 +187,8 @@ $(document).ready(function(){
 				// replaces name input with 
 
 				$("#nameForm").html("Hi " + game.name2 + "! You are player 2.");
+
+				game.userId = 2;
 
 				// Changes what is in player2
 
@@ -382,12 +388,6 @@ $(document).ready(function(){
 					game.logic();
 				} // end of if turn 3
 
-				// if the turns reset call reset player2 dom
-
-				if (game.turn == 0) {
-					game.reset2();
-				} // end of if turn 0
-
 			}); // end dataInfo value
 
 		}, // end updateVar function
@@ -503,8 +503,23 @@ $(document).ready(function(){
 
 			} // end of if p1 scissors loses
 
-			setTimeout(function() {
-				game.reset(); }, 5000);
+			// if player 1
+
+			if (game.userId == 1) {
+
+				setTimeout(function() {
+					game.reset(); }, 5000);
+
+			} // end if player 1
+
+			// else player 2
+
+			else {
+
+				setTimeout(function() {
+					game.reset2(); }, 5000);
+
+			} // end else player 2
 
 		}, // end of logic function
 
@@ -528,21 +543,15 @@ $(document).ready(function(){
 				turn: 0
 			});
 
-			// changes the dom to match changes in firebase for player 1
-
-			$("#nameForm").html("Hi " + game.name + "! You are player 1.");
-
 			// Empties the #winner div
 
 			$("#winner").html("");
 
-			// Changes what is in player1
-
-			$("#wait1").html("<h3>" + game.name + "</h3");
-
 			// empties the choice paragraph before adding buttons
 
 			$('#choices1').html("");
+
+			$('#choices2').html("");
 
 			for (var i = 0; i < game.pieces.length; i++) {
 
@@ -564,7 +573,7 @@ $(document).ready(function(){
 
 			// prints player 2's information to DOM
 
-			game.player2Here();
+			
 
 		}, // end of reset function
 
