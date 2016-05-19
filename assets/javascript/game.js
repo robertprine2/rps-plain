@@ -503,6 +503,238 @@ $(document).ready(function(){
 
 			} // end of if p1 scissors loses
 
+			// if p1 rock wins
+
+			if ((p1 == 'rock' && p2 == 'scissors') 
+				|| (p1 == 'rock' && p2 == 'lizard')) {
+
+				$('#winner').html("<h5>" + game.name + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.wins++;
+
+				player1Ref.update({
+					wins: game.wins
+				}); //  end firebase update
+
+				game.losses2++;
+
+				player2Ref.update({
+					losses: game.losses2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 rock wins
+
+			// if p1 rock loses
+
+			if ((p1 == 'rock' && p2 == 'paper') 
+				|| (p1 == 'rock' && p2 == 'spork')) {
+
+				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.losses++;
+
+				player1Ref.update({
+					losses: game.losses
+				}); //  end firebase update
+
+				game.wins2++;
+
+				player2Ref.update({
+					wins: game.wins2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 rock loses
+
+			// if p1 paper wins
+
+			if ((p1 == 'paper' && p2 == 'rock') 
+				|| (p1 == 'paper' && p2 == 'spork')) {
+
+				$('#winner').html("<h5>" + game.name + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.wins++;
+
+				player1Ref.update({
+					wins: game.wins
+				}); //  end firebase update
+
+				game.losses2++;
+
+				player2Ref.update({
+					losses: game.losses2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 rock wins
+
+			// if p1 paper loses
+
+			if ((p1 == 'paper' && p2 == 'scissors') 
+				|| (p1 == 'paper' && p2 == 'lizard')) {
+
+				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.losses++;
+
+				player1Ref.update({
+					losses: game.losses
+				}); //  end firebase update
+
+				game.wins2++;
+
+				player2Ref.update({
+					wins: game.wins2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 paper loses
+
+			// if p1 lizard wins
+
+			if ((p1 == 'lizard' && p2 == 'paper') 
+				|| (p1 == 'lizard' && p2 == 'spork')) {
+
+				$('#winner').html("<h5>" + game.name + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.wins++;
+
+				player1Ref.update({
+					wins: game.wins
+				}); //  end firebase update
+
+				game.losses2++;
+
+				player2Ref.update({
+					losses: game.losses2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 lizard wins
+
+			// if p1 lizard loses
+
+			if ((p1 == 'lizard' && p2 == 'scissors') 
+				|| (p1 == 'lizard' && p2 == 'rock')) {
+
+				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.losses++;
+
+				player1Ref.update({
+					losses: game.losses
+				}); //  end firebase update
+
+				game.wins2++;
+
+				player2Ref.update({
+					wins: game.wins2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 lizard loses
+
+			// if p1 spork wins
+
+			if ((p1 == 'spork' && p2 == 'rock') 
+				|| (p1 == 'spork' && p2 == 'scissors')) {
+
+				$('#winner').html("<h5>" + game.name + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.wins++;
+
+				player1Ref.update({
+					wins: game.wins
+				}); //  end firebase update
+
+				game.losses2++;
+
+				player2Ref.update({
+					losses: game.losses2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 spork wins
+
+			// if p1 spork loses
+
+			if ((p1 == 'spork' && p2 == 'scissors') 
+				|| (p1 == 'spork' && p2 == 'lizard')) {
+
+				$('#winner').html("<h5>" + game.name2 + " wins!</h5>");
+
+				$('#choices1').html('<p>' + game.name + ' chose ' + p1 + '.</p>');
+
+				$('#choices2').html('<p>' + game.name2 + ' chose ' + p2 + '.</p>');
+
+				game.losses++;
+
+				player1Ref.update({
+					losses: game.losses
+				}); //  end firebase update
+
+				game.wins2++;
+
+				player2Ref.update({
+					wins: game.wins2
+				}); //  end firebase update
+
+				$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
+
+				$("#score2").html("<p>Wins: "+ game.wins2 + " Losses: " + game.losses2 + " Ties: " + game.ties2 + "</p>");
+
+			} // end of if p1 paper loses
+
 			// if player 1
 
 			if (game.userId == 1) {
