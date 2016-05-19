@@ -886,7 +886,10 @@ $(document).ready(function(){
 		// chat send button
 
 		chatSend: function() {
+
 			$('#send').on('click', function() {
+
+				
 
 				var typed = $("#message").val().trim();
 
@@ -919,7 +922,7 @@ $(document).ready(function(){
 
 				
 			}); // end dataChat on childAdded
-		}, // end chatPrint function
+		}, // end chatUpdateLocal function
 
 		chatPrint: function() {
 
