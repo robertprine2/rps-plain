@@ -567,33 +567,19 @@ $(document).ready(function(){
 
 			} // ends for loop
 
-			$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
-
-			$("#disconnect1").html("<button id='disconnectBut1'>Disconnect</button>");
-
-			// prints player 2's information to DOM
-
-			
-
 		}, // end of reset function
 
 		// changes the dom to match changes in firebase for player 2
 
 		reset2: function() {
 
-			// replaces name input with 
-
-			$("#nameForm").html("Hi " + game.name2 + "! You are player 2.");
-
 			// Empties the #winner div
 
 			$("#winner").html("");
 
-			// Changes what is in player2
-
-			$("#wait2").html("<h3>" + game.name2 + "</h3");
-
 			// empties the choice paragraph before adding buttons
+
+			$('#choices1').html("");
 
 			$('#choices2').html("");
 
@@ -611,35 +597,35 @@ $(document).ready(function(){
 
 			} // ends for loop
 
-			$("#score2").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
-
-			// prints player 1's name over "waiting for player 1" in player 2's DOM
-
-			$("#wait1").html("<h3>" + game.name + "</h3");
-
-			// make player 2's DOM change the div height to keep score at the bottom for player 1
-
-			$("#choices1").addClass('heightHack');
-
-			$("#disconnect2").html("<button id='disconnectBut2'>Disconnect</button>");
-
-			// change player 2's DOM score for player 1
-
-			$("#score1").html("<p>Wins: "+ game.wins + " Losses: " + game.losses + " Ties: " + game.ties + "</p>");
-
 		}, // end of reset2 function
 
 		disconnect: function () {
 
-			$("#disconnectBut1").on('click', function() {
+			$(document).on('click', "#disconnectBut1", function() {
 
 				var playersRef = game.dataInfo.child(game.players);
 				var player1Ref = playersRef.child(game.player1);
 				var player2Ref = playersRef.child(game.player2);
 				
-				playersRef.remove();
+				player1Ref.remove();
 
-				game.data.Info.child(turn)
+				game.dataInfo.turn.remove();
+
+				window.location.href=window.location.href
+
+			});
+
+			$(document).on('click', "#disconnectBut2", function() {
+
+				var playersRef = game.dataInfo.child(game.players);
+				var player1Ref = playersRef.child(game.player1);
+				var player2Ref = playersRef.child(game.player2);
+				
+				player2Ref.remove();
+
+				game.dataInfo.turn.remove();
+
+				window.location.href=window.location.href
 
 			});
 
@@ -660,6 +646,10 @@ $(document).ready(function(){
 	// updates game variables
 
 	game.updateVar();
+
+	// enables disconnect buttons
+
+	game.disconnect();
 
 	// Player 1 picks their choice showing them what they chose, but not player 2. Their choice is added to firebase. The turn counter goes up highlighting the other players play area.
 
